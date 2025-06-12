@@ -1,0 +1,398 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <title>Form Validation Demo</title>
+    <style>
+        * {
+            margin: 0;
+            padding: 0;
+            box-sizing: border-box;
+        }
+
+        body {
+            font-family: 'Segoe UI', Tahoma, Geneva, Verdana, sans-serif;
+            background: linear-gradient(135deg, #667eea 0%, #764ba2 100%);
+            min-height: 100vh;
+            padding: 20px;
+        }
+
+        .container {
+            max-width: 800px;
+            margin: 0 auto;
+            background: white;
+            border-radius: 20px;
+            box-shadow: 0 20px 40px rgba(0,0,0,0.1);
+            overflow: hidden;
+        }
+
+        .header {
+            background: linear-gradient(135deg, #4f46e5 0%, #7c3aed 100%);
+            color: white;
+            padding: 30px;
+            text-align: center;
+        }
+
+        .header h1 {
+            font-size: 2.5rem;
+            margin-bottom: 10px;
+        }
+
+        .header p {
+            opacity: 0.9;
+            font-size: 1.1rem;
+        }
+
+        .form-section {
+            padding: 40px;
+        }
+
+        .form-group {
+            margin-bottom: 25px;
+        }
+
+        .form-group label {
+            display: block;
+            margin-bottom: 8px;
+            font-weight: 600;
+            color: #374151;
+            font-size: 0.95rem;
+        }
+
+        .form-group input,
+        .form-group select,
+        .form-group textarea {
+            width: 100%;
+            padding: 12px 16px;
+            border: 2px solid #e5e7eb;
+            border-radius: 10px;
+            font-size: 1rem;
+            transition: all 0.3s ease;
+            background: #f9fafb;
+        }
+
+        .form-group input:focus,
+        .form-group select:focus,
+        .form-group textarea:focus {
+            outline: none;
+            border-color: #4f46e5;
+            background: white;
+            box-shadow: 0 0 0 3px rgba(79, 70, 229, 0.1);
+        }
+
+        .form-group.error input,
+        .form-group.error select,
+        .form-group.error textarea {
+            border-color: #ef4444;
+            background: #fef2f2;
+        }
+
+        .error-message {
+            color: #ef4444;
+            font-size: 0.875rem;
+            margin-top: 5px;
+            display: none;
+        }
+
+        .form-group.error .error-message {
+            display: block;
+        }
+
+        .success-message {
+            color: #10b981;
+            font-size: 0.875rem;
+            margin-top: 5px;
+            display: none;
+        }
+
+        .form-group.success .success-message {
+            display: block;
+        }
+
+        .form-group.success input,
+        .form-group.success select,
+        .form-group.success textarea {
+            border-color: #10b981;
+            background: #f0fdf4;
+        }
+
+        .btn {
+            background: linear-gradient(135deg, #4f46e5 0%, #7c3aed 100%);
+            color: white;
+            padding: 14px 30px;
+            border: none;
+            border-radius: 10px;
+            font-size: 1.1rem;
+            font-weight: 600;
+            cursor: pointer;
+            transition: all 0.3s ease;
+            width: 100%;
+        }
+
+        .btn:hover {
+            transform: translateY(-2px);
+            box-shadow: 0 10px 25px rgba(79, 70, 229, 0.3);
+        }
+
+        .btn:disabled {
+            opacity: 0.6;
+            cursor: not-allowed;
+            transform: none;
+        }
+
+        .form-row {
+            display: grid;
+            grid-template-columns: 1fr 1fr;
+            gap: 20px;
+        }
+
+        @media (max-width: 768px) {
+            .form-row {
+                grid-template-columns: 1fr;
+            }
+            
+            .header h1 {
+                font-size: 2rem;
+            }
+            
+            .form-section {
+                padding: 20px;
+            }
+        }
+
+        .validation-status {
+            padding: 15px;
+            border-radius: 10px;
+            margin-bottom: 20px;
+            display: none;
+        }
+
+        .validation-status.success {
+            background: #f0fdf4;
+            border: 1px solid #10b981;
+            color: #065f46;
+        }
+
+        .validation-status.error {
+            background: #fef2f2;
+            border: 1px solid #ef4444;
+            color: #991b1b;
+        }
+    </style>
+</head>
+<body>
+    <div class="container">
+        <div class="header">
+            <h1>🔍 Form Validation</h1>
+            <p>Real-time validation with beautiful feedback</p>
+        </div>
+
+        <div class="form-section">
+            <div id="validationStatus" class="validation-status"></div>
+            
+            <form id="validationForm">
+                <div class="form-row">
+                    <div class="form-group">
+                        <label for="firstName">First Name</label>
+                        <input type="text" id="firstName" name="firstName" required>
+                        <div class="error-message">First name must be at least 2 characters</div>
+                        <div class="success-message">✓ Valid first name</div>
+                    </div>
+
+                    <div class="form-group">
+                        <label for="lastName">Last Name</label>
+                        <input type="text" id="lastName" name="lastName" required>
+                        <div class="error-message">Last name must be at least 2 characters</div>
+                        <div class="success-message">✓ Valid last name</div>
+                    </div>
+                </div>
+
+                <div class="form-group">
+                    <label for="email">Email Address</label>
+                    <input type="email" id="email" name="email" required>
+                    <div class="error-message">Please enter a valid email address</div>
+                    <div class="success-message">✓ Valid email address</div>
+                </div>
+
+                <div class="form-row">
+                    <div class="form-group">
+                        <label for="phone">Phone Number</label>
+                        <input type="tel" id="phone" name="phone" required>
+                        <div class="error-message">Please enter a valid phone number</div>
+                        <div class="success-message">✓ Valid phone number</div>
+                    </div>
+
+                    <div class="form-group">
+                        <label for="age">Age</label>
+                        <input type="number" id="age" name="age" min="18" max="100" required>
+                        <div class="error-message">Age must be between 18 and 100</div>
+                        <div class="success-message">✓ Valid age</div>
+                    </div>
+                </div>
+
+                <div class="form-group">
+                    <label for="password">Password</label>
+                    <input type="password" id="password" name="password" required>
+                    <div class="error-message">Password must be at least 8 characters with uppercase, lowercase, and number</div>
+                    <div class="success-message">✓ Strong password</div>
+                </div>
+
+                <div class="form-group">
+                    <label for="confirmPassword">Confirm Password</label>
+                    <input type="password" id="confirmPassword" name="confirmPassword" required>
+                    <div class="error-message">Passwords do not match</div>
+                    <div class="success-message">✓ Passwords match</div>
+                </div>
+
+                <div class="form-group">
+                    <label for="country">Country</label>
+                    <select id="country" name="country" required>
+                        <option value="">Select a country</option>
+                        <option value="us">United States</option>
+                        <option value="ca">Canada</option>
+                        <option value="uk">United Kingdom</option>
+                        <option value="au">Australia</option>
+                        <option value="de">Germany</option>
+                        <option value="fr">France</option>
+                        <option value="jp">Japan</option>
+                        <option value="other">Other</option>
+                    </select>
+                    <div class="error-message">Please select a country</div>
+                    <div class="success-message">✓ Country selected</div>
+                </div>
+
+                <div class="form-group">
+                    <label for="bio">Bio (Optional)</label>
+                    <textarea id="bio" name="bio" rows="4" placeholder="Tell us about yourself..."></textarea>
+                    <div class="success-message">✓ Bio looks good</div>
+                </div>
+
+                <button type="submit" class="btn">Validate & Submit</button>
+            </form>
+        </div>
+    </div>
+
+    <script>
+        class FormValidator {
+            constructor(formId) {
+                this.form = document.getElementById(formId);
+                this.statusDiv = document.getElementById('validationStatus');
+                this.init();
+            }
+
+            init() {
+                this.form.addEventListener('submit', (e) => this.handleSubmit(e));
+                
+                // Add real-time validation
+                const inputs = this.form.querySelectorAll('input, select, textarea');
+                inputs.forEach(input => {
+                    input.addEventListener('blur', () => this.validateField(input));
+                    input.addEventListener('input', () => this.validateField(input));
+                });
+            }
+
+            validateField(field) {
+                const formGroup = field.closest('.form-group');
+                const fieldName = field.name;
+                const value = field.value.trim();
+
+                // Remove previous validation classes
+                formGroup.classList.remove('error', 'success');
+
+                let isValid = true;
+
+                switch (fieldName) {
+                    case 'firstName':
+                    case 'lastName':
+                        isValid = value.length >= 2;
+                        break;
+                    
+                    case 'email':
+                        const emailRegex = /^[^\s@]+@[^\s@]+\.[^\s@]+$/;
+                        isValid = emailRegex.test(value);
+                        break;
+                    
+                    case 'phone':
+                        const phoneRegex = /^[\+]?[1-9][\d]{0,15}$/;
+                        isValid = phoneRegex.test(value.replace(/[\s\-\(\)]/g, ''));
+                        break;
+                    
+                    case 'age':
+                        const age = parseInt(value);
+                        isValid = age >= 18 && age <= 100;
+                        break;
+                    
+                    case 'password':
+                        const passwordRegex = /^(?=.*[a-z])(?=.*[A-Z])(?=.*\d)[a-zA-Z\d@$!%*?&]{8,}$/;
+                        isValid = passwordRegex.test(value);
+                        break;
+                    
+                    case 'confirmPassword':
+                        const password = this.form.querySelector('#password').value;
+                        isValid = value === password && value.length > 0;
+                        break;
+                    
+                    case 'country':
+                        isValid = value !== '';
+                        break;
+                    
+                    case 'bio':
+                        isValid = true; // Optional field
+                        break;
+                }
+
+                if (field.hasAttribute('required') && value === '') {
+                    isValid = false;
+                }
+
+                formGroup.classList.add(isValid ? 'success' : 'error');
+                return isValid;
+            }
+
+            validateForm() {
+                const inputs = this.form.querySelectorAll('input[required], select[required]');
+                let isFormValid = true;
+
+                inputs.forEach(input => {
+                    if (!this.validateField(input)) {
+                        isFormValid = false;
+                    }
+                });
+
+                return isFormValid;
+            }
+
+            showStatus(message, type) {
+                this.statusDiv.textContent = message;
+                this.statusDiv.className = `validation-status ${type}`;
+                this.statusDiv.style.display = 'block';
+
+                setTimeout(() => {
+                    this.statusDiv.style.display = 'none';
+                }, 5000);
+            }
+
+            handleSubmit(e) {
+                e.preventDefault();
+
+                if (this.validateForm()) {
+                    this.showStatus('✅ Form validation successful! All fields are valid.', 'success');
+                    
+                    // Simulate form submission
+                    setTimeout(() => {
+                        this.showStatus('🚀 Form submitted successfully!', 'success');
+                    }, 1000);
+                } else {
+                    this.showStatus('❌ Please fix the validation errors before submitting.', 'error');
+                }
+            }
+        }
+
+        // Initialize the form validator
+        document.addEventListener('DOMContentLoaded', () => {
+            new FormValidator('validationForm');
+        });
+    </script>
+</body>
+</html>

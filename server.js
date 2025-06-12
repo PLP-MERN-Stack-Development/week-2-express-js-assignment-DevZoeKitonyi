@@ -40,6 +40,11 @@ app.get('/', (req, res) => {
 app.use('/api/users', userRoutes);
 app.use('/api/products', productRoutes);
 
+
+
+
+
+// 404 Not Found route
 // Health check endpoint
 app.get('/health', (req, res) => {
   res.status(200).json({
