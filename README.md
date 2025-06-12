@@ -1,63 +1,214 @@
-[![Open in Visual Studio Code](https://classroom.github.com/assets/open-in-vscode-2e0aaae1b6195c2367325f4f02e2d04e9abb55f0b24a779b69b11b9e10269abc.svg)](https://classroom.github.com/online_ide?assignment_repo_id=19754303&assignment_repo_type=AssignmentRepo)
-# Express.js RESTful API Assignment
+# Week 2 Express.js Assignment
 
-This assignment focuses on building a RESTful API using Express.js, implementing proper routing, middleware, and error handling.
+A comprehensive Express.js REST API demonstrating fundamental concepts including routing, middleware, validation, error handling, and CRUD operations.
 
-## Assignment Overview
+## 🚀 Features
 
-You will:
-1. Set up an Express.js server
-2. Create RESTful API routes for a product resource
-3. Implement custom middleware for logging, authentication, and validation
-4. Add comprehensive error handling
-5. Develop advanced features like filtering, pagination, and search
+- **RESTful API Design**: Clean and intuitive API endpoints
+- **CRUD Operations**: Complete Create, Read, Update, Delete functionality
+- **Input Validation**: Robust validation middleware for data integrity
+- **Error Handling**: Comprehensive error handling with meaningful responses
+- **Security**: Helmet.js for security headers
+- **CORS**: Cross-Origin Resource Sharing enabled
+- **Logging**: Request logging with Morgan
+- **Environment Configuration**: Environment variables support
+- **Health Check**: System health monitoring endpoint
 
-## Getting Started
+## 📦 Installation
 
-1. Accept the GitHub Classroom assignment invitation
-2. Clone your personal repository that was created by GitHub Classroom
-3. Install dependencies:
-   ```
-   npm install
-   ```
-4. Run the server:
-   ```
-   npm start
-   ```
+1. Clone the repository:
+```bash
+git clone <repository-url>
+cd week-2-express-assignment
+```
 
-## Files Included
+2. Install dependencies:
+```bash
+npm install
+```
 
-- `Week2-Assignment.md`: Detailed assignment instructions
-- `server.js`: Starter Express.js server file
-- `.env.example`: Example environment variables file
+3. Create a `.env` file (already included):
+```env
+PORT=3000
+NODE_ENV=development
+```
 
-## Requirements
+4. Start the development server:
+```bash
+npm run dev
+```
 
-- Node.js (v18 or higher)
-- npm or yarn
-- Postman, Insomnia, or curl for API testing
+Or start the production server:
+```bash
+npm start
+```
 
-## API Endpoints
+## 🛠️ API Endpoints
 
-The API will have the following endpoints:
+### Base URL
+```
+http://localhost:3000
+```
 
-- `GET /api/products`: Get all products
-- `GET /api/products/:id`: Get a specific product
-- `POST /api/products`: Create a new product
-- `PUT /api/products/:id`: Update a product
-- `DELETE /api/products/:id`: Delete a product
+### General Endpoints
 
-## Submission
+| Method | Endpoint | Description |
+|--------|----------|-------------|
+| GET | `/` | Welcome message and API info |
+| GET | `/health` | Health check endpoint |
 
-Your work will be automatically submitted when you push to your GitHub Classroom repository. Make sure to:
+### User Endpoints
 
-1. Complete all the required API endpoints
-2. Implement the middleware and error handling
-3. Document your API in the README.md
-4. Include examples of requests and responses
+| Method | Endpoint | Description |
+|--------|----------|-------------|
+| GET | `/api/users` | Get all users |
+| GET | `/api/users/:id` | Get user by ID |
+| POST | `/api/users` | Create new user |
+| PUT | `/api/users/:id` | Update user |
+| DELETE | `/api/users/:id` | Delete user |
 
-## Resources
+#### User Query Parameters
+- `page`: Page number for pagination (default: 1)
+- `limit`: Items per page (default: 10)
+- `city`: Filter by city name
+- `minAge`: Filter by minimum age
 
-- [Express.js Documentation](https://expressjs.com/)
-- [RESTful API Design Best Practices](https://restfulapi.net/)
-- [HTTP Status Codes](https://developer.mozilla.org/en-US/docs/Web/HTTP/Status) 
+#### User Data Structure
+```json
+{
+  "id": 1,
+  "name": "John Doe",
+  "email": "john@example.com",
+  "age": 30,
+  "city": "New York"
+}
+```
+
+### Product Endpoints
+
+| Method | Endpoint | Description |
+|--------|----------|-------------|
+| GET | `/api/products` | Get all products |
+| GET | `/api/products/:id` | Get product by ID |
+| POST | `/api/products` | Create new product |
+| PUT | `/api/products/:id` | Update product |
+| DELETE | `/api/products/:id` | Delete product |
+
+#### Product Query Parameters
+- `category`: Filter by category
+- `inStock`: Filter by stock status (true/false)
+- `minPrice`: Filter by minimum price
+- `maxPrice`: Filter by maximum price
+- `sort`: Sort products (price-asc, price-desc, name-asc, name-desc)
+
+#### Product Data Structure
+```json
+{
+  "id": 1,
+  "name": "Laptop",
+  "price": 999.99,
+  "category": "Electronics",
+  "inStock": true,
+  "description": "High-performance laptop for professionals"
+}
+```
+
+## 🧪 Testing the API
+
+### Using cURL
+
+#### Get all users:
+```bash
+curl http://localhost:3000/api/users
+```
+
+#### Create a new user:
+```bash
+curl -X POST http://localhost:3000/api/users \
+  -H "Content-Type: application/json" \
+  -d '{
+    "name": "Alice Johnson",
+    "email": "alice@example.com",
+    "age": 28,
+    "city": "Boston"
+  }'
+```
+
+#### Get all products with filtering:
+```bash
+curl "http://localhost:3000/api/products?category=Electronics&inStock=true&sort=price-asc"
+```
+
+#### Create a new product:
+```bash
+curl -X POST http://localhost:3000/api/products \
+  -H "Content-Type: application/json" \
+  -d '{
+    "name": "Wireless Headphones",
+    "price": 199.99,
+    "category": "Electronics",
+    "inStock": true,
+    "description": "High-quality wireless headphones with noise cancellation"
+  }'
+```
+
+### Using Postman
+
+1. Import the API endpoints into Postman
+2. Set the base URL to `http://localhost:3000`
+3. Test each endpoint with appropriate request bodies
+
+## 📁 Project Structure
+
+```
+├── server.js              # Main server file
+├── routes/
+│   ├── users.js           # User routes
+│   └── products.js        # Product routes
+├── middleware/
+│   ├── validation.js      # Input validation middleware
+│   ├── errorHandler.js    # Error handling middleware
+│   └── notFound.js        # 404 handler
+├── public/
+│   └── index.html         # API documentation page
+├── .env                   # Environment variables
+├── package.json           # Dependencies and scripts
+└── README.md             # This file
+```
+
+## 🔧 Middleware Used
+
+- **Express.json()**: Parse JSON request bodies
+- **Express.urlencoded()**: Parse URL-encoded request bodies
+- **Helmet**: Security headers
+- **CORS**: Cross-origin resource sharing
+- **Morgan**: HTTP request logging
+- **Custom Validation**: Input validation for users and products
+- **Custom Error Handler**: Centralized error handling
+
+## 🎯 Learning Objectives Covered
+
+1. ✅ **Express.js Setup**: Server configuration and middleware setup
+2. ✅ **Routing**: Organized route handlers with Express Router
+3. ✅ **HTTP Methods**: GET, POST, PUT, DELETE operations
+4. ✅ **Request/Response**: Handling request data and sending responses
+5. ✅ **Middleware**: Custom and third-party middleware implementation
+6. ✅ **Error Handling**: Comprehensive error handling strategy
+7. ✅ **Validation**: Input validation and sanitization
+8. ✅ **Query Parameters**: Filtering, pagination, and sorting
+9. ✅ **Status Codes**: Appropriate HTTP status codes
+10. ✅ **JSON APIs**: RESTful JSON API design
+
+## 🚀 Next Steps
+
+- Add database integration (MongoDB/PostgreSQL)
+- Implement authentication and authorization
+- Add unit and integration tests
+- Deploy to cloud platform (Heroku, Vercel, etc.)
+- Add API documentation with Swagger
+- Implement rate limiting
+- Add caching mechanisms
+
+## 📝 License
+
+This project is licensed under the MIT License.
