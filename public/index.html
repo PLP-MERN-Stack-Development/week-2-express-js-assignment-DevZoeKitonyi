@@ -1,0 +1,163 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <title>Week 2 Express.js Assignment</title>
+    <style>
+        body {
+            font-family: 'Segoe UI', Tahoma, Geneva, Verdana, sans-serif;
+            max-width: 1200px;
+            margin: 0 auto;
+            padding: 20px;
+            background-color: #f5f5f5;
+        }
+        .container {
+            background: white;
+            padding: 30px;
+            border-radius: 10px;
+            box-shadow: 0 2px 10px rgba(0,0,0,0.1);
+        }
+        h1 {
+            color: #333;
+            text-align: center;
+            margin-bottom: 30px;
+        }
+        .endpoint {
+            background: #f8f9fa;
+            padding: 15px;
+            margin: 10px 0;
+            border-radius: 5px;
+            border-left: 4px solid #007bff;
+        }
+        .method {
+            font-weight: bold;
+            color: #007bff;
+            margin-right: 10px;
+        }
+        .url {
+            font-family: monospace;
+            background: #e9ecef;
+            padding: 2px 6px;
+            border-radius: 3px;
+        }
+        .description {
+            margin-top: 5px;
+            color: #666;
+        }
+        .section {
+            margin: 30px 0;
+        }
+        .section h2 {
+            color: #495057;
+            border-bottom: 2px solid #dee2e6;
+            padding-bottom: 10px;
+        }
+    </style>
+</head>
+<body>
+    <div class="container">
+        <h1>🚀 Week 2 Express.js Assignment API</h1>
+        
+        <div class="section">
+            <h2>📋 Available Endpoints</h2>
+            
+            <div class="endpoint">
+                <span class="method">GET</span>
+                <span class="url">/</span>
+                <div class="description">Welcome message and API information</div>
+            </div>
+            
+            <div class="endpoint">
+                <span class="method">GET</span>
+                <span class="url">/health</span>
+                <div class="description">Health check endpoint</div>
+            </div>
+        </div>
+        
+        <div class="section">
+            <h2>👥 User Endpoints</h2>
+            
+            <div class="endpoint">
+                <span class="method">GET</span>
+                <span class="url">/api/users</span>
+                <div class="description">Get all users (supports pagination and filtering)</div>
+            </div>
+            
+            <div class="endpoint">
+                <span class="method">GET</span>
+                <span class="url">/api/users/:id</span>
+                <div class="description">Get user by ID</div>
+            </div>
+            
+            <div class="endpoint">
+                <span class="method">POST</span>
+                <span class="url">/api/users</span>
+                <div class="description">Create new user</div>
+            </div>
+            
+            <div class="endpoint">
+                <span class="method">PUT</span>
+                <span class="url">/api/users/:id</span>
+                <div class="description">Update user by ID</div>
+            </div>
+            
+            <div class="endpoint">
+                <span class="method">DELETE</span>
+                <span class="url">/api/users/:id</span>
+                <div class="description">Delete user by ID</div>
+            </div>
+        </div>
+        
+        <div class="section">
+            <h2>🛍️ Product Endpoints</h2>
+            
+            <div class="endpoint">
+                <span class="method">GET</span>
+                <span class="url">/api/products</span>
+                <div class="description">Get all products (supports filtering and sorting)</div>
+            </div>
+            
+            <div class="endpoint">
+                <span class="method">GET</span>
+                <span class="url">/api/products/:id</span>
+                <div class="description">Get product by ID</div>
+            </div>
+            
+            <div class="endpoint">
+                <span class="method">POST</span>
+                <span class="url">/api/products</span>
+                <div class="description">Create new product</div>
+            </div>
+            
+            <div class="endpoint">
+                <span class="method">PUT</span>
+                <span class="url">/api/products/:id</span>
+                <div class="description">Update product by ID</div>
+            </div>
+            
+            <div class="endpoint">
+                <span class="method">DELETE</span>
+                <span class="url">/api/products/:id</span>
+                <div class="description">Delete product by ID</div>
+            </div>
+        </div>
+        
+        <div class="section">
+            <h2>🔧 Features Implemented</h2>
+            <ul>
+                <li>✅ RESTful API design</li>
+                <li>✅ CRUD operations for Users and Products</li>
+                <li>✅ Input validation middleware</li>
+                <li>✅ Error handling middleware</li>
+                <li>✅ Query parameters for filtering and pagination</li>
+                <li>✅ Security headers with Helmet</li>
+                <li>✅ CORS enabled</li>
+                <li>✅ Request logging with Morgan</li>
+                <li>✅ Environment variables support</li>
+                <li>✅ Health check endpoint</li>
+            </ul>
+        </div>
+    </div>
+</body>
+</html>
