@@ -5,8 +5,9 @@ import morgan from 'morgan';
 import dotenv from 'dotenv';
 import userRoutes from './routes/users.js';
 import productRoutes from './routes/products.js';
+import  notFound  from './middleware/notFound.js';
 import { errorHandler } from './middleware/errorHandler.js';
-import { notFound } from './middleware/notFound.js';
+
 
 // Load environment variables
 dotenv.config();

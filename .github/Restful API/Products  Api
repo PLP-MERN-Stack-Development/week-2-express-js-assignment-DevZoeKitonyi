@@ -1,0 +1,342 @@
+// server.js - Complete Express.js server with Products API
+import express from 'express';
+import path from 'path';
+import { fileURLToPath } from 'url';
+
+const __filename = fileURLToPath(import.meta.url);
+const __dirname = path.dirname(__filename);
+
+const app = express();
+const PORT = process.env.PORT || 3000;
+
+// Middleware
+app.use(express.json());
+app.use(express.urlencoded({ extended: true }));
+app.use(express.static('public'));
+
+// In-memory products storage (replace with database in production)
+let products = [
+  {
+    id: 1,
+    name: "Wireless Headphones",
+    description: "High-quality wireless headphones with noise cancellation",
+    price: 199.99,
+    category: "Electronics",
+    inStock: true
+  },
+  {
+    id: 2,
+    name: "Coffee Maker",
+    description: "Automatic drip coffee maker with programmable timer",
+    price: 89.99,
+    category: "Kitchen",
+    inStock: true
+  },
+  {
+    id: 3,
+    name: "Running Shoes",
+    description: "Comfortable running shoes with advanced cushioning",
+    price: 129.99,
+    category: "Sports",
+    inStock: false
+  }
+];
+
+let nextId = 4; // For generating new IDs
+
+// Helper function to find product by ID
+const findProductById = (id) => {
+  return products.find(product => product.id === parseInt(id));
+};
+
+// Helper function to validate product data
+const validateProduct = (productData) => {
+  const errors = [];
+  
+  if (!productData.name || typeof productData.name !== 'string' || productData.name.trim().length === 0) {
+    errors.push('Name is required and must be a non-empty string');
+  }
+  
+  if (!productData.description || typeof productData.description !== 'string' || productData.description.trim().length === 0) {
+    errors.push('Description is required and must be a non-empty string');
+  }
+  
+  if (productData.price === undefined || typeof productData.price !== 'number' || productData.price < 0) {
+    errors.push('Price is required and must be a non-negative number');
+  }
+  
+  if (!productData.category || typeof productData.category !== 'string' || productData.category.trim().length === 0) {
+    errors.push('Category is required and must be a non-empty string');
+  }
+  
+  if (productData.inStock === undefined || typeof productData.inStock !== 'boolean') {
+    errors.push('inStock is required and must be a boolean');
+  }
+  
+  return errors;
+};
+
+// PRODUCTS API ROUTES
+
+// GET /api/products - List all products
+app.get('/api/products', (req, res) => {
+  try {
+    // Optional query parameters for filtering
+    const { category, inStock, minPrice, maxPrice } = req.query;
+    let filteredProducts = [...products];
+    
+    // Filter by category
+    if (category) {
+      filteredProducts = filteredProducts.filter(product => 
+        product.category.toLowerCase() === category.toLowerCase()
+      );
+    }
+    
+    // Filter by stock status
+    if (inStock !== undefined) {
+      const stockFilter = inStock === 'true';
+      filteredProducts = filteredProducts.filter(product => product.inStock === stockFilter);
+    }
+    
+    // Filter by price range
+    if (minPrice) {
+      filteredProducts = filteredProducts.filter(product => product.price >= parseFloat(minPrice));
+    }
+    
+    if (maxPrice) {
+      filteredProducts = filteredProducts.filter(product => product.price <= parseFloat(maxPrice));
+    }
+    
+    res.status(200).json({
+      success: true,
+      count: filteredProducts.length,
+      data: filteredProducts
+    });
+  } catch (error) {
+    res.status(500).json({
+      success: false,
+      message: 'Internal server error',
+      error: error.message
+    });
+  }
+});
+
+// GET /api/products/:id - Get a specific product by ID
+app.get('/api/products/:id', (req, res) => {
+  try {
+    const productId = req.params.id;
+    
+    // Validate ID format
+    if (isNaN(productId)) {
+      return res.status(400).json({
+        success: false,
+        message: 'Invalid product ID format'
+      });
+    }
+    
+    const product = findProductById(productId);
+    
+    if (!product) {
+      return res.status(404).json({
+        success: false,
+        message: `Product with ID ${productId} not found`
+      });
+    }
+    
+    res.status(200).json({
+      success: true,
+      data: product
+    });
+  } catch (error) {
+    res.status(500).json({
+      success: false,
+      message: 'Internal server error',
+      error: error.message
+    });
+  }
+});
+
+// POST /api/products - Create a new product
+app.post('/api/products', (req, res) => {
+  try {
+    const productData = req.body;
+    
+    // Validate required fields
+    const validationErrors = validateProduct(productData);
+    if (validationErrors.length > 0) {
+      return res.status(400).json({
+        success: false,
+        message: 'Validation failed',
+        errors: validationErrors
+      });
+    }
+    
+    // Create new product
+    const newProduct = {
+      id: nextId++,
+      name: productData.name.trim(),
+      description: productData.description.trim(),
+      price: parseFloat(productData.price),
+      category: productData.category.trim(),
+      inStock: productData.inStock
+    };
+    
+    products.push(newProduct);
+    
+    res.status(201).json({
+      success: true,
+      message: 'Product created successfully',
+      data: newProduct
+    });
+  } catch (error) {
+    res.status(500).json({
+      success: false,
+      message: 'Internal server error',
+      error: error.message
+    });
+  }
+});
+
+// PUT /api/products/:id - Update an existing product
+app.put('/api/products/:id', (req, res) => {
+  try {
+    const productId = req.params.id;
+    const updateData = req.body;
+    
+    // Validate ID format
+    if (isNaN(productId)) {
+      return res.status(400).json({
+        success: false,
+        message: 'Invalid product ID format'
+      });
+    }
+    
+    // Find existing product
+    const productIndex = products.findIndex(product => product.id === parseInt(productId));
+    
+    if (productIndex === -1) {
+      return res.status(404).json({
+        success: false,
+        message: `Product with ID ${productId} not found`
+      });
+    }
+    
+    // Validate update data
+    const validationErrors = validateProduct(updateData);
+    if (validationErrors.length > 0) {
+      return res.status(400).json({
+        success: false,
+        message: 'Validation failed',
+        errors: validationErrors
+      });
+    }
+    
+    // Update product
+    products[productIndex] = {
+      id: parseInt(productId),
+      name: updateData.name.trim(),
+      description: updateData.description.trim(),
+      price: parseFloat(updateData.price),
+      category: updateData.category.trim(),
+      inStock: updateData.inStock
+    };
+    
+    res.status(200).json({
+      success: true,
+      message: 'Product updated successfully',
+      data: products[productIndex]
+    });
+  } catch (error) {
+    res.status(500).json({
+      success: false,
+      message: 'Internal server error',
+      error: error.message
+    });
+  }
+});
+
+// DELETE /api/products/:id - Delete a product
+app.delete('/api/products/:id', (req, res) => {
+  try {
+    const productId = req.params.id;
+    
+    // Validate ID format
+    if (isNaN(productId)) {
+      return res.status(400).json({
+        success: false,
+        message: 'Invalid product ID format'
+      });
+    }
+    
+    // Find product index
+    const productIndex = products.findIndex(product => product.id === parseInt(productId));
+    
+    if (productIndex === -1) {
+      return res.status(404).json({
+        success: false,
+        message: `Product with ID ${productId} not found`
+      });
+    }
+    
+    // Store deleted product info
+    const deletedProduct = products[productIndex];
+    
+    // Remove product from array
+    products.splice(productIndex, 1);
+    
+    res.status(200).json({
+      success: true,
+      message: 'Product deleted successfully',
+      data: deletedProduct
+    });
+  } catch (error) {
+    res.status(500).json({
+      success: false,
+      message: 'Internal server error',
+      error: error.message
+    });
+  }
+});
+
+// Root route
+app.get('/', (req, res) => {
+  res.json({
+    message: 'Welcome to the Products API',
+    endpoints: {
+      'GET /api/products': 'List all products',
+      'GET /api/products/:id': 'Get product by ID',
+      'POST /api/products': 'Create new product',
+      'PUT /api/products/:id': 'Update product',
+      'DELETE /api/products/:id': 'Delete product'
+    }
+  });
+});
+
+// 404 Not Found middleware
+const notFound = (req, res, next) => {
+  res.status(404).json({
+    success: false,
+    message: 'Resource not found',
+    requestedUrl: req.originalUrl
+  });
+};
+
+app.use(notFound);
+
+// Error handling middleware
+const errorHandler = (err, req, res, next) => {
+  console.error(err.stack);
+  res.status(500).json({
+    success: false,
+    message: 'Something went wrong!',
+    error: process.env.NODE_ENV === 'development' ? err.message : 'Internal server error'
+  });
+};
+
+app.use(errorHandler);
+
+// Start server
+app.listen(PORT, () => {
+  console.log(`Server is running on http://localhost:${PORT}`);
+  console.log(`Products API available at http://localhost:${PORT}/api/products`);
+});
